@@ -1,5 +1,4 @@
 import requests
-# ✅ Correct
 from config import API_KEY, REGIONS, MARKETS, ODDS_FORMAT, DATE_FORMAT
 
 def fetch_odds(sports, bookmakers):
