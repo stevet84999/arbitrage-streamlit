@@ -1,11 +1,25 @@
-API_KEY = "817c309e5d37829ba411d488fdab5e2a"
-REGIONS = "uk"  # You can use 'us', 'uk', 'eu'
-SPORTS = {
-    "football": "soccer_epl",
-    "tennis": "tennis",
-    "basketball": "basketball_nba",
-    "rugby": "rugby_union",
-    "horse racing": "horse_racing_uk"
-}
-MARKET = "h2h"
-BOOKMAKERS = ["coral", "ladbrokes", "betfred"]
+# config.py
+
+# ✅ List of sports to monitor
+SPORTS = [
+    "soccer",
+    "tennis",
+    "basketball",
+    "rugby_union",
+    "horse_racing"
+]
+
+# ✅ Prioritised list of bookmakers to check odds from
+BOOKMAKERS = [
+    "coral",
+    "ladbrokes",
+    "betfred"
+]
+
+# ✅ Add fallback if needed (optional)
+FALLBACK_BOOKMAKERS = [
+    "williamhill",
+    "paddypower",
+    "skybet",
+    "bet365"
+]
