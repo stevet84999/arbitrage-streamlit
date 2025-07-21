@@ -2,7 +2,7 @@ import requests
 from config import API_KEY, REGIONS, MARKETS, ODDS_FORMAT, DATE_FORMAT
 def fetch_odds(sports, bookmakers):
 if not API_KEY:
-raise ValueError("ODDS_API_KEY is missing. Please add it to Streamlit secrets.")
+    raise ValueError("ODDS_API_KEY is missing. Please check your config file.")
 base_url = "https://api.the-odds-api.com/v4/sports/odds"
 all_odds = []
 for sport in sports:
