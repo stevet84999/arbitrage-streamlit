@@ -1,4 +1,4 @@
-def detect_2way_arbitrage(edef find_arbitrage_opportunities(events, min_profit_margin=0.01):
+def find_arbitrage_opportunities(events, min_profit_margin=0.01):
     opportunities = []
     for event in events:
         for bookmaker in event['bookmakers']:
@@ -39,5 +39,3 @@ def detect_2way_arbitrage(edef find_arbitrage_opportunities(events, min_profit_m
                                 })
     return opportunities
 
-            }
-    return None
