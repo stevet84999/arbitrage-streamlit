@@ -19,5 +19,29 @@ min_profit_margin = st.slider(
 
 # Load odds
 with st.spinner("Fetching latest odds..."):
+    all_odds = get_odds_for_all_sports()
+
+# Detect arbitrage opportunities
+arbs = find_arbitrage_opportunities(all_odds, min_profit_margin)
+
+if not arbs:
+    st.warning("No arbitrage opportunities found at this margin.")
+else:
+    st.success(f"✅ Found {len(arbs)} arbitrage opportunities!")
+
+    for arb in arbs:
+        st.subheader(f"{arb['event']} ({arb['sport'].title()})")
+
+        num_cols = len(arb.get('odds', {}))
+        if num_cols > 0:
+            cols = st.columns(num_cols)
+            for i, (bookmaker, odd) in enumerate(arb['odds'].items()):
+                with cols[i]:
+                    st.write(f"**{bookmaker}**: {odd}")
+        else:
+            st.warning("No odds data available for this event.")
+
+        st.markdown("---")
+
 
 
