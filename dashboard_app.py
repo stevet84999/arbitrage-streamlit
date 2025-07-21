@@ -23,7 +23,15 @@ if arbs:
     st.success(f"✅ Found {len(arbs)} arbitrage opportunities!")
     for arb in arbs:
         st.subheader(f"{arb['event']} ({arb['sport'].title()})")
-        cols = st.columns(len(arb['odds']))
+        num_cols = len(arb.get('odds', []))
+if num_cols > 0:
+    cols = st.columns(num_cols)
+    for i, (bookmaker, odd) in enumerate(arb['odds'].items()):
+        with cols[i]:
+            st.write(f"**{bookmaker}**: {odd}")
+else:
+    st.warning("No odds data available for this event.")
+
         for idx, outcome in enumerate(arb['odds']):
             with cols[idx]:
                 st.metric(
