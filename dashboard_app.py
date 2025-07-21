@@ -1,25 +1,39 @@
 import streamlit as st
-import pandas as pd
+from odds_api import fetch_odds
+from arbitrage_engine import detect_2way_arbitrage
 import time
 
-st.set_page_config(page_title="Arbitrage Dashboard")
-st.title("Arbitrage Betting Dashboard")
+st.set_page_config(page_title="Arbitrage Dashboard", layout="wide")
 
-data = {
-    "Event": ["Football", "Tennis", "Basketball"],
-    "Bookmaker A Odds": [1.9, 2.1, 1.8],
-    "Bookmaker B Odds": [2.05, 1.95, 2.0],
-    "Arbitrage %": [1.2, 0.8, 1.5]
-}
-df = pd.DataFrame(data)
-st.dataframe(df)
+st.title("🎯 Sports Arbitrage Opportunities")
+st.caption("Real-time arbitrage detector for Football, Tennis, Basketball, Rugby, and Horse Racing")
 
-# 🔁 Add a live-updating clock to keep the app interactive
+min_profit = st.slider("Minimum Profit Margin (%)", 0.1, 10.0, 1.0, step=0.1)
 st.markdown("---")
-st.subheader("Live Clock (Keeps App Active)")
-placeholder = st.empty()
 
-while True:
-    placeholder.markdown(f"**Current time:** {time.strftime('%H:%M:%S')}")
-    time.sleep(1)
+with st.spinner("Fetching odds and detecting arbitrage..."):
+    odds_data = fetch_odds()
+    arbs = []
+    for event in odds_data:
+        result = detect_2way_arbitrage(event)
+        if result and result["profit_margin"] >= min_profit:
+            arbs.append(result)
 
+if arbs:
+    st.success(f"✅ Found {len(arbs)} arbitrage opportunities!")
+    for arb in arbs:
+        st.subheader(f"{arb['event']} ({arb['sport'].title()})")
+        cols = st.columns(len(arb['odds']))
+        for idx, outcome in enumerate(arb['odds']):
+            with cols[idx]:
+                st.metric(
+                    label=f"{outcome}",
+                    value=f"Odds: {arb['odds'][outcome]}",
+                    delta=f"Bookie: {arb['bookmakers'][outcome]}"
+                )
+        st.markdown(f"**Profit Margin:** {arb['profit_margin']}%")
+        st.markdown("---")
+else:
+    st.warning("No arbitrage opportunities found with the current filters.")
+
+st.caption("⏱️ Data refreshes each time you reload the page.")
