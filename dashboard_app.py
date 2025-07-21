@@ -18,4 +18,6 @@ min_profit_margin = st.slider(
 )
 
 # Load odds
-with st.spinner("Fetch
+with st.spinner("Fetching latest odds..."):
+
+
