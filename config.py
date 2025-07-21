@@ -8,3 +8,4 @@ SPORTS = {
     "horse racing": "horse_racing_uk"
 }
 MARKET = "h2h"
+BOOKMAKERS = ["coral", "ladbrokes", "betfred"]
