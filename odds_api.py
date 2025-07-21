@@ -1,22 +1,30 @@
 import requests
-from config import API_KEY, REGIONS, MARKET, SPORTS
+from config import API_KEY, REGIONS, MARKETS
 
-def fetch_odds():
+def fetch_odds(sports, bookmakers):
+    if not API_KEY:
+        raise ValueError("ODDS_API_KEY is missing. Please add it to Streamlit secrets.")
+
+    base_url = "https://api.the-odds-api.com/v4/sports/odds"
     all_odds = []
-    for sport_name, sport_key in SPORTS.items():
-        url = f"https://api.the-odds-api.com/v4/sports/{sport_key}/odds"
-        params = {
+
+    for sport in sports:
+        response = requests.get(base_url, params={
             "apiKey": API_KEY,
+            "sport": sport,
             "regions": REGIONS,
-            "markets": MARKET,
-            "oddsFormat": "decimal"
-        }
-        response = requests.get(url, params=params)
+            "markets": MARKETS,
+            "oddsFormat": "decimal",
+            "bookmakers": ",".join(bookmakers)
+        })
+
         if response.status_code == 200:
-            data = response.json()
-            for event in data:
-                event['sport_name'] = sport_name
-            all_odds.extend(data)
+            try:
+                all_odds.extend(response.json())
+            except Exception as e:
+                print(f"JSON parse error for {sport}: {e}")
         else:
-            print(f"Failed to fetch {sport_name}: {response.status_code}")
+            print(f"Error fetching odds for {sport}: {response.status_code} {response.text}")
+
     return all_odds
+
