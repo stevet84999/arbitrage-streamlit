@@ -25,5 +25,3 @@ def fetch_odds(sports, bookmakers):
             print(f"Error fetching odds for {sport}: {e}")
 
     return all_odds
-
-
